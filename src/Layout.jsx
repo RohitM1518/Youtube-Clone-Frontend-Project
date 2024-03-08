@@ -6,12 +6,13 @@ import { SideBar } from './components/NavBar/SideBar'
 
 const Layout = () => {
     return (
-        <> 
-        <Header />
-        <SideBar />
-        <div className=' flex ml-64 pt-16'>
-        <Outlet />
-        </div>
+        <>
+            <Header />
+            <SideBar />
+            <div className='p-20 bg-custom-gray-1 w-full h-screen max-sm:p-3 max-lg:p-7 max-sm:pt-20 max-lg:pt-20' >
+                <Outlet />
+            </div>
+
         </>
     )
 }

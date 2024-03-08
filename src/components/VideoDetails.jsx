@@ -2,6 +2,6 @@ import React from 'react'
 
 export const VideoDetails = () => {
   return (
-    <div>VideoDetails</div>
+    <div className=' text-black'>VideoDetails</div>
   )
 }
