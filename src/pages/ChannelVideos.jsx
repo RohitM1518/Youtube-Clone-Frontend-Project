@@ -1,6 +1,6 @@
 import React,{useState,useEffect} from 'react'
-import { ChannelDetails } from './index.js'
-import { VideoCard } from './index.js'
+import { ChannelDetails } from '../components/index.js'
+import { VideoCard } from '../components/index.js'
 import { useParams,NavLink } from 'react-router-dom'
 import axios from 'axios'
 

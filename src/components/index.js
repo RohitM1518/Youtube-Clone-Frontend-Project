@@ -4,13 +4,13 @@ import Button from "./Button/Button";
 import VideoCard from "./VideoCard.jsx";
 import { VideoDetails } from "./VideoDetails";
 import ChannelDetails from "./ChannelDetails";
-import Home from "./Home/Home.jsx";
+import Home from "../pages/Home.jsx";
 import SearchBar from "./SearchBar.jsx";
 import Logo from "./Logo.jsx";
-import Login from "./Login.jsx";
-import SignUp from "./SignUp.jsx";
+import Login from "../pages/Login.jsx";
+import SignUp from "../pages/SignUp.jsx";
 import Input from "./Input.jsx";
-import ChannelVideos from "./ChannelVideos.jsx";
+import ChannelVideos from "../pages/ChannelVideos.jsx";
 
 export {
     Header,

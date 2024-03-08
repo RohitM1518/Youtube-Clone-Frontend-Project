@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import VideoCard from '../VideoCard'
+import VideoCard from '../components/VideoCard'
 import { Link } from 'react-router-dom'
 import axios from "axios"
 
