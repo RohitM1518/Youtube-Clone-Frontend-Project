@@ -3,8 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '../components/index.js';
 import { NavLink } from 'react-router-dom';
+import { Loading } from '../components/index.js'
 
-const ChannelDetails = ({children}) => {
+
+const ChannelDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
 
@@ -37,7 +39,7 @@ const ChannelDetails = ({children}) => {
   }, [id]);
 
   if (!data) {
-    return (<h1 className=' text-white'> Loading ... </h1>)
+    return <Loading />
   }
   return (
     <div>
@@ -54,7 +56,8 @@ const ChannelDetails = ({children}) => {
             <img src={data.avatar} alt="" className='w-full h-full object-cover rounded-full ' />
           </div>
           <div className='flex flex-col gap-3 justify-center'>
-            <h1 className=' text-white text-5xl'>{data.username}</h1>
+            <h1 className=' text-white text-5xl'>{data.fullname}</h1>
+            <h1 className=' text-white opacity-75'>@{data.username}</h1>
             <div className=' flex flex-col gap-5 items-baseline'>
               <div className='flex gap-6 opacity-75 '>
                 <h1 className=' text-white'>Subscribers: {data.subscribersCount}</h1>
@@ -68,22 +71,19 @@ const ChannelDetails = ({children}) => {
         </div>
       </div>
 
-      <div className=' flex justify-evenly'>
-        <NavLink to={`/channel/${id}/Home/`} className={({ isActive }) => isActive ? "text-blue-500" : "text-white"}>
-          Home
-        </NavLink>
-        <NavLink to={`/channel/${id}/videos/`} className={` text-white`}>
+      <div className=' flex justify-evenly my-1'>
+        <NavLink to={`/channel/${id}/videos/`} className={({isActive})=>`${isActive?" bg-custom-gray-2 ":" "} text-white hover:bg-custom-gray-2  p-1 px-3 rounded-lg `}>
           Videos
         </NavLink>
-        <NavLink to={`/channel/${id}/playlist/`} className={` text-white`}>
+        <NavLink to={`/channel/${id}/playlists/`} className={({isActive})=>`${isActive?" bg-custom-gray-2 ":" "} text-white hover:bg-custom-gray-2  p-1 px-3 rounded-lg `}>
           Playlists
         </NavLink>
-        <NavLink to={`/channel/${id}/tweets/`} className={` text-white`}>
+        <NavLink to={`/channel/${id}/tweets/`} className={({isActive})=>`${isActive?" bg-custom-gray-2 ":" "} text-white hover:bg-custom-gray-2  p-1 px-3 rounded-lg `}>
           Tweets
         </NavLink>
       </div>
 
-      <div className=' h-[1px] w-full bg-white opacity-60'></div>
+      <div className=' h-[1px] w-full bg-white opacity-60 mb-5'></div>
       
     </div>
   );

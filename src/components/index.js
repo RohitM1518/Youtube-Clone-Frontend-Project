@@ -11,6 +11,9 @@ import Login from "../pages/Login.jsx";
 import SignUp from "../pages/SignUp.jsx";
 import Input from "./Input.jsx";
 import ChannelVideos from "../pages/ChannelVideos.jsx";
+import Loading from "./Loading.jsx";
+import Playlist from "./Playlist.jsx";
+import TweetCard from "./TweetCard.jsx";
 
 export {
     Header,
@@ -25,6 +28,9 @@ export {
     Login,
     SignUp,
     Input,
-    ChannelVideos
+    ChannelVideos,
+    Loading,
+    Playlist,
+    TweetCard,
     
  };

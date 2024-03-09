@@ -1,14 +1,18 @@
 import React from 'react'
+import Button from '@mui/material/Button';
 
-const Button = ({text,style, imgPath, imgWidth=25, imgHeight=25,fullStyle='',type="submit"}) => {
+
+const ButtonComp = ({text,style, imgPath, imgWidth=25, imgHeight=25,fullStyle='',type="submit"}) => {
   return (
     <>
-    <div className={`flex gap-2 border border-white justify-center p-1 hover:bg-custom-gray-1 shrink rounded-sm ${fullStyle}`}>
+    <Button className={`${style} flex  border border-white w-full gap-3 justify-center items-baseline`}
+    variant='outlined' 
+    type={type}
+    color='primary'>
     {imgPath && <img src={imgPath} alt="" height={imgHeight} width={imgWidth} className='' />}
-    <button className={`${style} flex`} type={type}>{text}</button>
-    </div>
+    {text}</Button>
     </>
   )
 }
 
-export default Button
+export default ButtonComp
