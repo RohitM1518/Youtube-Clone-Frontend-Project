@@ -4,23 +4,39 @@ import { useParams } from 'react-router-dom';
 import { Button } from '../components/index.js';
 import { NavLink } from 'react-router-dom';
 import { Loading } from '../components/index.js'
-
+import { useSelector } from 'react-redux';
 
 const ChannelDetails = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
-
-  const [toggleSubscribe, setToggleSubscribe] = useState(false)
+  const [toggleSubscribe, setToggleSubscribe] = useState("Subscribe") 
+  const [subscribers, setSubscribers] = useState(0) 
+  const accessToken = useSelector(state => state.user.accessToken);
+  
   
   const toggleSubscribeMethod = async () => {
     try {
-      const res = await axios.post(`http://localhost:8000/api/v1/subscription/toggle-subscription/${id}`)
-      if(res){
-        setToggleSubscribe(True)
+      if(!accessToken){
+        alert("Please login to Subscribe");
       }
-
+      const res = await axios.post(`http://localhost:8000/api/v1/subscription/toggle-subscription/${id}`, null, {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${accessToken}` // Corrected template literal syntax
+        }
+      });
+      console.log(res.data.message)
+      if(res.data.message === "Subscribed successfully"){
+        setToggleSubscribe("Subscribed")
+        setSubscribers(subscribers +1 )
+        
+      }
+      if(res.data.message === "Unsunscribed successfully"){
+        setToggleSubscribe("Subscribe")
+        setSubscribers(subscribers -1 )
+      }
     } catch (error) {
-      
+      console.error('There was an error!', error);
     }
   }
 
@@ -29,6 +45,7 @@ const ChannelDetails = () => {
       try {
         const res = await axios.get(`http://localhost:8000/api/v1/users/channel/${id}`);
         setData(res.data.data);
+        setSubscribers(res.data.data.subscribersCount)
       } catch (error) {
         // Handle the error
         console.error(error);
@@ -36,7 +53,7 @@ const ChannelDetails = () => {
     };
 
     fetchChannel();
-  }, [id]);
+  }, [id,accessToken]);
 
   if (!data) {
     return <Loading />
@@ -57,14 +74,14 @@ const ChannelDetails = () => {
           </div>
           <div className='flex flex-col gap-3 justify-center'>
             <h1 className=' text-white text-5xl'>{data.fullname}</h1>
-            <h1 className=' text-white opacity-75'>@{data.username}</h1>
+            <h1 className=' text-white opacity-75'>@{data.username || ""}</h1>
             <div className=' flex flex-col gap-5 items-baseline'>
               <div className='flex gap-6 opacity-75 '>
-                <h1 className=' text-white'>Subscribers: {data.subscribersCount}</h1>
+                <h1 className=' text-white'>Subscribers: {subscribers}</h1>
                 <h1 className=' text-white'>Subscribed To: {data.subscribedToCount}</h1>
               </div>
               <div onClick={toggleSubscribeMethod}>
-                <Button text={(data.isSubscribed ||toggleSubscribe) ? "Subscribed" : "Subscribe"} style={'text-white'} fullStyle={data.isSubscribed || toggleSubscribe? "" : "bg-red-500"} />
+                <Button text={toggleSubscribe} style={'text-white'} fullStyle={data.isSubscribed || toggleSubscribe? "" : "bg-red-500"} />
               </div>
             </div>
           </div>

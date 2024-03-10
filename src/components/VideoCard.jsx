@@ -1,6 +1,7 @@
 import React from 'react'
 import { format } from 'timeago.js';
 import { Link } from 'react-router-dom';
+import {Avatar} from './index.js'
 
 const VideoCard = ({video,user}) => {
 
@@ -10,7 +11,7 @@ const VideoCard = ({video,user}) => {
         <img src={video.thumbnail} alt="" className=' w-full h-full object-cover' />
         </div>
         <div className='flex gap-3 items-center'>
-            <img src={user.avatar} alt=""  className=' rounded-full border border-black w-10 h-10 object-cover'/>
+          <Avatar src={user.avatar} />
             <div className=' text-white'>
                 <h1 className=' font-bold'>{video.title}</h1>
                 <Link to={`/channel/${user._id}/videos`}>

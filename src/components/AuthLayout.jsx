@@ -6,23 +6,27 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 //We can also use AuthLayout as a function name instead of Protected
-export default function Protected({children,authentication=true}) 
-{
+export default function Protected({ children, authentication = true }) {
   const navigate = useNavigate();
-  const [loader,setLoader] = useState(true);
+  const [loader, setLoader] = useState(true);
+  const authStatus = useSelector(state => state.user.authStatus)
 
-  useEffect(()=>{
+  useEffect(() => {
     // Make it easy
     //auth=false and authstatus =true
     if (authentication && authStatus !== authentication) {
-        navigate("/login")
+      navigate("/login")
     }
-    else if(!authentication && authStatus !==authentication){
-        navigate("/")
-    }
+
+    // else if (!authentication && authStatus !== authentication) {
+    //   navigate("/")
+    // }
     setLoader(false)
-  },[authStatus, navigate, authentication])
-  return loader ? <h1>Loading...</h1> : <>{children}</>
+  }, [authStatus, navigate, authentication])
+  return loader ? <h1>Loading...</h1> : <>{children}
+  </>
 }

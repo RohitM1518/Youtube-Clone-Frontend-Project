@@ -23,9 +23,9 @@ const Home = () => {
     <div className=' p-2 w-full text-white grid gap-12 h-auto grid-cols-3 max-sm:grid-cols-1 max-lg:grid-cols-2'>
       {
       videos.map((video)=>(
-        <div key={video._id}>
+        <Link key={video._id} to={`/video/${video._id}`}>
         <VideoCard video={video} user={video.users[0]}/>
-        </div>
+        </Link>
       ))
       }
     </div>

@@ -2,15 +2,20 @@ import { Try } from '@mui/icons-material'
 import React, { useState } from 'react'
 import { set, useForm } from "react-hook-form"
 import {Logo,Button,Input} from "../components/index.js"
-import { Link } from 'react-router-dom'
-
+import { Link,useNavigate } from 'react-router-dom'
+import {useDispatch} from 'react-redux'
+import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice.js'
+import axios from 'axios'
 
 const SignUp = () => {
     const [error, setError] = useState("")
     const { register, handleSubmit } = useForm()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const create = async (data,event) => {
         event.preventDefault();
+        dispatch(loginStart())
         console.log("Data is",data)
         setError("")
         try {
@@ -18,9 +23,21 @@ const SignUp = () => {
                 setError("Password and Confirm Password do not match.")
                 return;
             }
-            setError("Loged in")
+            const formData = new FormData();
+            formData.append("fullname", data.fullname);
+            formData.append("username", data.username);
+            formData.append("email", data.email);
+            formData.append("avatar", data.avatar[0]); // Assuming avatar is a single file
+            formData.append("coverImage", data.coverImage[0]); // Assuming coverImage is a single file
+            formData.append("password", data.password);
+
+            const res = await axios.post('http://localhost:8000/api/v1/users/register',formData)
+            sessionStorage.setItem('refreshToken',res.data.data.refreshToken)
+            dispatch(loginSuccess(res.data.data))
+            navigate("/")
         } catch (error) {
             setError(error.message)
+            dispatch(loginFailure())
         }
     }
     return (
@@ -47,14 +64,14 @@ const SignUp = () => {
                         <Input
                             label="Full Name:"
                             placeholder="Enter your full name"
-                            {...register("name", {
+                            {...register("fullname", {
                                 required: true,
                             })}
                         />
                         <Input
                             label="Username:"
                             placeholder="Enter Username"
-                            {...register("Username", {
+                            {...register("username", {
                                 required: true,
                                 validate: {
                                     matchPatern: (value) => /^[^\s]+$/.test(value) ||

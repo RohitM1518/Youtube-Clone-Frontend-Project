@@ -32,7 +32,7 @@ const ChannelVideos = () => {
       <ChannelDetails />
       <div className='grid grid-cols-4 gap-4 max-sm:grid-cols-1 max-lg:grid-cols-2'>
         {videos && videos.map((video) => (
-          <NavLink key={video._id}>
+          <NavLink key={video._id} to={`/video/${video._id}`}>
             <VideoCard video={video} user={video.owner} />
           </NavLink>
         ))

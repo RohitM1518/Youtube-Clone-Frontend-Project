@@ -2,23 +2,52 @@ import React from 'react';
 import { Logo, Button, Input } from "../components/index.js";
 import { useState } from 'react';
 import { useForm } from "react-hook-form";
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { useDispatch } from 'react-redux';
+import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice.js';
+import { auth, provider } from '../utils/firebase.js'
+import { signInWithPopup } from 'firebase/auth';
+import googleLogo from '../assets/google.svg'
 const Login = () => {
     const navigate = useNavigate()
     const [error, setError] = useState("");
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const dispatch = useDispatch()
+
+    const signInWithGoogle =async()=>{
+        signInWithPopup(auth,provider)
+        .then((result)=>{
+            console.log(result)
+            dispatch(loginStart())
+            axios.post('http://localhost:8000/api/v1/users/googleAuth',
+            {
+                fullname: result.user.displayName,
+                email:result.user.email,
+                avatar:result.user.photoURL,
+            })
+            .then((res)=>{
+                sessionStorage.setItem("refreshToken",res.data.data.refreshToken)
+                dispatch(loginSuccess(res.data.data)
+                )})
+            navigate("/")
+        })
+        .catch((error)=>{
+            dispatch(loginFailure())
+            throw error
+        })
+    }
 
     const login = async (data, event) => {
         event.preventDefault();
+        dispatch(loginStart())
         setError("");
         try {
             const userData = await axios.post("http://localhost:8000/api/v1/users/login", data);
-            console.log("Logged in", userData);
-            if(userData){
-                navigate("/")
-            }
+            sessionStorage.setItem('refreshToken', userData.data.data.refreshToken)
+            dispatch(loginSuccess(userData.data.data))
+            navigate("/")
+
         } catch (error) {
             setError(error.message);
         }
@@ -46,30 +75,16 @@ const Login = () => {
                 <form onSubmit={handleSubmit(login)}>
                     <div className='space-y-5'>
                         <Input
-                            label="Username:"
-                            placeholder="Enter Username"
-                            {...register("Username", {
-                                required: "Username is required",
+                            label="Username or Email:"
+                            placeholder="Enter Username or Email"
+                            {...register("usernameOrEmail", {
+
                                 validate: {
-                                    matchPattern: (value) => /^[^\s]+$/.test(value) || "Username should not contain Spaces",
+                                    matchPattern: (value) => /^[^\s]+$/.test(value) || "Feild should not contain Spaces",
                                 }
                             })}
                         />
-                        {errors.Username && <p className='text-red-500 text-center'>{errors.Username.message}</p>}
-                        <h1 className='text-white font-bold text-center'>OR</h1>
-                        <Input
-                            label='Email:'
-                            placeholder='Enter your Email'
-                            type='email'
-                            {...register("email", {
-                                required: "Email is required",
-                                validate: {
-                                    matchPattern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                        "Email address must be a valid address",
-                                }
-                            })}
-                        />
-                        {errors.email && <p className='text-red-500 text-center'>{errors.email.message}</p>}
+                        {errors.usernameOrEmail && <p className='text-red-500 text-center'>{errors.Username.message}</p>}
                         <Input
                             label="Password"
                             placeholder="Enter Your Password"
@@ -78,6 +93,11 @@ const Login = () => {
                                 required: "Password is required",
                             })}
                         />
+                        <h1 className='text-white font-bold text-center'>OR</h1>
+                        <div onClick={signInWithGoogle}>
+                        <Button text={'Continue with Google'} imgPath={googleLogo} />
+                        </div>
+
                         {errors.password && <p className='text-red-500 text-center'>{errors.password.message}</p>}
                         <Button text="Login" type="submit" style='text-white' />
                     </div>
