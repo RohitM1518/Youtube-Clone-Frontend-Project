@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom"
 import { Home, AuthLayout, Login, SignUp, ChannelVideos } from './components/index.js'
-import { ChannelPlaylist, ChannelTweets, Dashboard, ManageTweets, WatchHistory, ManageVideos, Subscriptions, Video } from './pages/index.js'
+import { SubscribedChannels,ChannelPlaylist, ChannelTweets, Dashboard, ManageTweets, WatchHistory, ManageVideos, Subscriptions, Video, ManageProfile } from './pages/index.js'
 import { store } from './redux/store.js'
 import { Provider } from 'react-redux'
 import App from './App.jsx'
@@ -36,6 +36,11 @@ const router = createBrowserRouter(
       <Route path='/channel/:id/tweets/' element={
         <AuthLayout authentication={false}>
           <ChannelTweets />
+        </AuthLayout>
+      } />
+      <Route path='/channel/:id/subscribedto/' element={
+        <AuthLayout authentication={false}>
+          <SubscribedChannels />
         </AuthLayout>
       } />
       <Route path='/login' element={
@@ -76,6 +81,11 @@ const router = createBrowserRouter(
       <Route path='/subscriptions' element={
         <AuthLayout authentication={true}>
           <Subscriptions />
+        </AuthLayout>
+      } />
+      <Route path='/user/:userId' element={
+        <AuthLayout authentication={true}>
+          <ManageProfile />
         </AuthLayout>
       } />
     </Route>

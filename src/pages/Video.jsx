@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Loading, VideoPlayer, VideoCard } from '../components'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+
 
 const Video = () => {
   const { videoId } = useParams()
@@ -12,11 +12,15 @@ const Video = () => {
   const [comments, setComments] = useState([])
   const accessToken = useSelector(state => state.user.accessToken);
 
-  
   useEffect(() => {
     try {
       const fetchVideo = async () => {
-        const videoRes = await axios.get(`http://localhost:8000/api/v1/videos/get-video-by-id/${videoId}`)
+        const videoRes = await axios.post(`http://localhost:8000/api/v1/videos/get-video-by-id/${videoId}`, {}, {
+          withCredentials: true,
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
         setVideo(videoRes.data.data.video)
 
         const subscriberRes = await axios.get(`http://localhost:8000/api/v1/subscription/subscribers/${videoRes.data.data.video.owner._id}`)
@@ -39,9 +43,9 @@ const Video = () => {
     return <Loading />
   }
   return (
-      <div className=''>
+    <div className=''>
       <VideoPlayer video={video} subscibersCount={subscibersCount} comments={comments} />
-      </div>
+    </div>
   )
 }
 

@@ -5,6 +5,7 @@ import { Button } from '../components/index.js';
 import { NavLink } from 'react-router-dom';
 import { Loading } from '../components/index.js'
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const ChannelDetails = () => {
   const { id } = useParams();
@@ -12,8 +13,24 @@ const ChannelDetails = () => {
   const [toggleSubscribe, setToggleSubscribe] = useState("Subscribe") 
   const [subscribers, setSubscribers] = useState(0) 
   const accessToken = useSelector(state => state.user.accessToken);
-  
-  
+  useEffect(() => {
+    const isChannelSubscribed=async()=>{
+    try {
+      const res = await axios.get(`http://localhost:8000/api/v1/subscription/issubscribed?channelId=${id}`, {
+        withCredentials: true,
+        headers: {
+          'Authorization': `Bearer ${accessToken}` // Corrected template literal syntax
+        }
+      });
+      console.log("Result ", res.data)
+      setToggleSubscribe(res.data.message)
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
+  isChannelSubscribed()
+  },[]);
+
   const toggleSubscribeMethod = async () => {
     try {
       if(!accessToken){
@@ -26,12 +43,12 @@ const ChannelDetails = () => {
         }
       });
       console.log(res.data.message)
-      if(res.data.message === "Subscribed successfully"){
+      if(toggleSubscribe === "Subscribe"){
         setToggleSubscribe("Subscribed")
         setSubscribers(subscribers +1 )
         
       }
-      if(res.data.message === "Unsunscribed successfully"){
+      if(toggleSubscribe === "Subscribed"){
         setToggleSubscribe("Subscribe")
         setSubscribers(subscribers -1 )
       }
@@ -74,11 +91,13 @@ const ChannelDetails = () => {
           </div>
           <div className='flex flex-col gap-3 justify-center'>
             <h1 className=' text-white text-5xl'>{data.fullname}</h1>
-            <h1 className=' text-white opacity-75'>@{data.username || ""}</h1>
+            <h1 className=' text-white opacity-75'>{data?.username || ""}</h1>
             <div className=' flex flex-col gap-5 items-baseline'>
               <div className='flex gap-6 opacity-75 '>
                 <h1 className=' text-white'>Subscribers: {subscribers}</h1>
+                <Link to={`/channel/${id}/subscribedto`}>
                 <h1 className=' text-white'>Subscribed To: {data.subscribedToCount}</h1>
+                </Link>
               </div>
               <div onClick={toggleSubscribeMethod}>
                 <Button text={toggleSubscribe} style={'text-white'} fullStyle={data.isSubscribed || toggleSubscribe? "" : "bg-red-500"} />

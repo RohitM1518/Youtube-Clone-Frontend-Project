@@ -76,12 +76,15 @@ export const SideBar = () => {
                         </li>
                         <div className=' h-0.5 opacity-25 bg-white mt-3' ></div>
 
-                        <Typography align='center' className='copyright text-white' variant='body2' >
-                            @2024 built by Rohit
-                        </Typography>
                         {userid && <div className=' flex justify-center'>
                         <Logout />
                         </div>}
+                        {userid && <Link className=' flex justify-center' to={`/user/${userid}`}>
+                        <Button text={"Edit Profile"}/>
+                        </Link>}
+                        <Typography align='center' className='copyright text-white' variant='body2' >
+                            @2024 built by Rohit
+                        </Typography>
                     </ul>
                 </div>
             </nav>

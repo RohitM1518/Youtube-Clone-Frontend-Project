@@ -6,6 +6,8 @@ import Dashboard from "./Dashboard";
 import WatchHistory from "./WatchHistory";
 import Subscriptions from "./Subscriptions";
 import Video from "./Video";
+import ManageProfile from "./ManageProfile";
+import SubscribedChannels from "./SubscribedChannels";
 
 export{
     ChannelPlaylist,
@@ -15,5 +17,7 @@ export{
     Dashboard,
     WatchHistory,
     Subscriptions,
-    Video
+    Video,
+    ManageProfile,
+    SubscribedChannels
 }

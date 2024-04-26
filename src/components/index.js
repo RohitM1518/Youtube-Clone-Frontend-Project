@@ -19,6 +19,7 @@ import Logout from "./Logout.jsx";
 import { VideoPlayer } from "./VideoPlayer.jsx";
 import Description from "./Description.jsx";
 import Comment from "./Comment.jsx";
+import ChannelCard from "./ChannelCard.jsx";
 
 export {
     Header,
@@ -41,5 +42,6 @@ export {
     Logout,
     VideoPlayer,
     Description,
-    Comment
+    Comment,
+    ChannelCard
  };

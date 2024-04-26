@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import {Avatar} from './index.js'
 
 const VideoCard = ({video,user}) => {
-
+  
   return (
     <div className='bg-custom-gray-1 overflow-hidden p-4'>
         <div className='w-96 h-44 '>
